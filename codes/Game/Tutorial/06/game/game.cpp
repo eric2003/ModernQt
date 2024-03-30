@@ -1,0 +1,45 @@
+#include "game.h"
+#include "player.h"
+#include "score.h"
+#include "health.h"
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QTimer>
+
+
+Game::Game() {
+    //create a scene
+    this->scene = new QGraphicsScene();
+    this->scene->setSceneRect(0,0,800,600);  // make the scene 800x600 instead of infinity by infinity (default)
+
+    // make the newly created scene the scene to visualize (since Game is a QGraphicsView Widget,
+    // it can be used to visualize scenes)
+    this->setScene(this->scene);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setFixedSize(800,600);
+
+    // create the player
+    this->player = new Player();
+    this->player->setRect(0,0,100,100); // change the rect from 0x0 (default) to 100x100 pixels
+    this->player->setPos(400,500); // TODO generalize to always be in the middle bottom of screen
+    //this->player->setPos(this->width()/2,this->height()-player->rect().height());
+    // make the player focusable and set it to be the current focus
+    this->player->setFlag(QGraphicsItem::ItemIsFocusable);
+    this->player->setFocus();
+    // add the player to the scene
+    this->scene->addItem(this->player);
+
+    // create the score/health
+    this->score = new Score();
+    this->scene->addItem(this->score);
+
+    this->health = new Health();
+    this->health->setPos(health->x(),health->y()+25);
+    this->scene->addItem(this->health);
+
+    // spawn enemies
+    QTimer *timer = new QTimer();
+    QObject::connect(timer,&QTimer::timeout,player,&Player::spawn);
+    timer->start(2000);
+}
